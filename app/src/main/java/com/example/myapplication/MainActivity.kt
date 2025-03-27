@@ -29,6 +29,9 @@ import com.example.myapplication.ui.screens.*
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.utils.NotificationUtils
 import java.util.concurrent.TimeUnit
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +44,12 @@ class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1)
         }
+
+        // Write a message to the database
+        val database = Firebase.database
+        val myRef = database.getReference("message")
+
+        myRef.setValue("Hello, World!")
 
         setContent {
             MyApplicationTheme {
