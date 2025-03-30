@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -25,7 +27,13 @@ fun InitialQuestions2Screen(
     var lunchTime by remember { mutableStateOf(LocalTime.of(12, 45)) }
     var dinnerTime by remember { mutableStateOf(LocalTime.of(20, 0)) }
 
+    var isLoading by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
     val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
+
+    val auth = FirebaseAuth.getInstance()
+    val database = FirebaseDatabase.getInstance().reference
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -36,7 +44,7 @@ fun InitialQuestions2Screen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Barra superior con flecha de retroceso
+            // Botón de retroceso
             IconButton(
                 onClick = onBackClick,
                 modifier = Modifier.padding(top = 8.dp)
@@ -47,7 +55,6 @@ fun InitialQuestions2Screen(
                 )
             }
 
-            // Contenido principal
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -57,18 +64,11 @@ fun InitialQuestions2Screen(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 // Inicio del día
-                Text(
-                    text = "¿A qué hora empiezas el día?",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
+                Text("¿A qué hora empiezas el día?", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Selector de hora de inicio
                 OutlinedTextField(
                     value = startTime.format(timeFormatter),
-                    onValueChange = { /* Se manejará con un TimePicker */ },
+                    onValueChange = {},
                     label = { Text("Hora de inicio") },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = true
@@ -77,18 +77,11 @@ fun InitialQuestions2Screen(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 // Fin del día
-                Text(
-                    text = "¿A qué hora terminas el día?",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
+                Text("¿A qué hora terminas el día?", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Selector de hora de fin
                 OutlinedTextField(
                     value = endTime.format(timeFormatter),
-                    onValueChange = { /* Se manejará con un TimePicker */ },
+                    onValueChange = {},
                     label = { Text("Hora de fin") },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = true
@@ -97,89 +90,83 @@ fun InitialQuestions2Screen(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 // Horarios de comidas
-                Text(
-                    text = "¿Cuáles son los horarios de tus comidas?",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
+                Text("¿Cuáles son los horarios de tus comidas?", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Desayuno
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                listOf(
+                    "Desayuno" to breakfastTime,
+                    "Almuerzo" to lunchTime,
+                    "Cena" to dinnerTime
+                ).forEach { (label, time) ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = label, fontSize = 18.sp)
+                        OutlinedTextField(
+                            value = time.format(timeFormatter),
+                            onValueChange = {},
+                            modifier = Modifier.width(150.dp),
+                            readOnly = true
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
+                if (errorMessage != null) {
                     Text(
-                        text = "Desayuno",
-                        fontSize = 18.sp
-                    )
-                    OutlinedTextField(
-                        value = breakfastTime.format(timeFormatter),
-                        onValueChange = { /* Se manejará con un TimePicker */ },
-                        modifier = Modifier.width(150.dp),
-                        readOnly = true
+                        text = errorMessage!!,
+                        color = MaterialTheme.colorScheme.error,
+                        fontSize = 14.sp
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Almuerzo
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Almuerzo",
-                        fontSize = 18.sp
-                    )
-                    OutlinedTextField(
-                        value = lunchTime.format(timeFormatter),
-                        onValueChange = { /* Se manejará con un TimePicker */ },
-                        modifier = Modifier.width(150.dp),
-                        readOnly = true
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Cena
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Cena",
-                        fontSize = 18.sp
-                    )
-                    OutlinedTextField(
-                        value = dinnerTime.format(timeFormatter),
-                        onValueChange = { /* Se manejará con un TimePicker */ },
-                        modifier = Modifier.width(150.dp),
-                        readOnly = true
-                    )
+                if (isLoading) {
+                    CircularProgressIndicator()
                 }
             }
 
-            // Botón siguiente
+            // Botón siguiente con guardado en Firebase
             Button(
-                onClick = onNextClick,
+                onClick = {
+                    val userId = auth.currentUser?.uid
+                    if (userId != null) {
+                        isLoading = true
+                        val scheduleData = mapOf(
+                            "horaInicio" to startTime.format(timeFormatter),
+                            "horaFin" to endTime.format(timeFormatter),
+                            "horaDesayuno" to breakfastTime.format(timeFormatter),
+                            "horaComida" to lunchTime.format(timeFormatter),
+                            "horaCena" to dinnerTime.format(timeFormatter)
+                        )
+
+                        database.child("usuarios").child(userId).child("respuestas").child("horario")
+                            .setValue(scheduleData)
+                            .addOnSuccessListener {
+                                isLoading = false
+                                errorMessage = null
+                                onNextClick()
+                            }
+                            .addOnFailureListener { e ->
+                                isLoading = false
+                                errorMessage = "Error al guardar: ${e.message}"
+                            }
+                    } else {
+                        errorMessage = "Usuario no autenticado."
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
                     .padding(vertical = 8.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary
-                )
+                ),
+                enabled = !isLoading
             ) {
-                Text(
-                    text = "Siguiente",
-                    fontSize = 18.sp
-                )
+                Text("Siguiente", fontSize = 18.sp)
             }
         }
     }
-} 
+}

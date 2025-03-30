@@ -15,6 +15,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,6 +25,7 @@ fun RegisterScreen(
 ) {
     val context = LocalContext.current
     val auth = FirebaseAuth.getInstance()
+    val database = FirebaseDatabase.getInstance().reference
 
     var nombre by remember { mutableStateOf("") }
     var apellidos by remember { mutableStateOf("") }
@@ -41,7 +43,6 @@ fun RegisterScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Barra superior con flecha de retroceso
             IconButton(
                 onClick = onBackClick,
                 modifier = Modifier.padding(top = 8.dp)
@@ -52,7 +53,6 @@ fun RegisterScreen(
                 )
             }
 
-            // Contenido principal
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -61,7 +61,6 @@ fun RegisterScreen(
             ) {
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Imagen de perfil circular
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = "Foto de perfil",
@@ -72,8 +71,6 @@ fun RegisterScreen(
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Título
                 Text(
                     text = "AGUATORIO",
                     fontSize = 32.sp,
@@ -83,7 +80,6 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Campos del formulario
                 OutlinedTextField(
                     value = nombre,
                     onValueChange = { nombre = it },
@@ -136,18 +132,33 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Botón de registro
                 Button(
                     onClick = {
                         if (email.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
                             isLoading = true
                             auth.createUserWithEmailAndPassword(email, password)
                                 .addOnCompleteListener { task ->
-                                    isLoading = false
                                     if (task.isSuccessful) {
-                                        Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
-                                        onRegisterClick()
+                                        val uid = auth.currentUser?.uid
+                                        val userData = mapOf(
+                                            "nombre" to nombre,
+                                            "apellidos" to apellidos,
+                                            "email" to email
+                                        )
+                                        uid?.let {
+                                            database.child("usuarios").child(it).setValue(userData)
+                                                .addOnSuccessListener {
+                                                    isLoading = false
+                                                    Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
+                                                    onRegisterClick()
+                                                }
+                                                .addOnFailureListener { e ->
+                                                    isLoading = false
+                                                    Toast.makeText(context, "Error al guardar datos: ${e.message}", Toast.LENGTH_LONG).show()
+                                                }
+                                        }
                                     } else {
+                                        isLoading = false
                                         Toast.makeText(context, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                                     }
                                 }
