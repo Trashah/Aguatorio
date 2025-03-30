@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -8,20 +9,27 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onBackClick: () -> Unit,
-    onLoginClick: () -> Unit
+    onLoginSuccess: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
+    val auth = FirebaseAuth.getInstance()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -81,7 +89,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Ingresa tu correo con el que te registraste",
+                    text = "Ingresa tu correo y contraseña",
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
@@ -98,11 +106,43 @@ fun LoginScreen(
                     singleLine = true
                 )
 
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Campo de contraseña
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Contraseña") },
+                    placeholder = { Text("••••••••") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation()
+                )
+
                 Spacer(modifier = Modifier.height(24.dp))
+
+                // Mensaje de error si hay un fallo
+                errorMessage?.let {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.error,
+                        fontSize = 14.sp
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
 
                 // Botón de inicio de sesión
                 Button(
-                    onClick = onLoginClick,
+                    onClick = {
+                        if (email.isNotEmpty() && password.isNotEmpty()) {
+                            loginUser(email, password, onLoginSuccess) { error ->
+                                errorMessage = error
+                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            errorMessage = "Por favor, ingresa todos los campos"
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -111,7 +151,7 @@ fun LoginScreen(
                     )
                 ) {
                     Text(
-                        text = "Sign up with email",
+                        text = "Iniciar sesión",
                         fontSize = 18.sp
                     )
                 }
@@ -135,4 +175,22 @@ fun LoginScreen(
             )
         }
     }
-} 
+}
+
+// 🔹 Función para iniciar sesión con Firebase
+fun loginUser(
+    email: String,
+    password: String,
+    onSuccess: () -> Unit,
+    onError: (String) -> Unit
+) {
+    val auth = FirebaseAuth.getInstance()
+    auth.signInWithEmailAndPassword(email, password)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                onSuccess()
+            } else {
+                onError(task.exception?.localizedMessage ?: "Error desconocido")
+            }
+        }
+}
