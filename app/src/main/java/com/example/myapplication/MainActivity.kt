@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import RegisterScreen
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -29,6 +30,10 @@ import com.example.myapplication.ui.screens.*
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.utils.NotificationUtils
 import java.util.concurrent.TimeUnit
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,11 +41,18 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         createNotificationChannel() // Crear canal de notificación
         NotificationUtils.scheduleNotifications(this) // Programar notificaciones cada hora
+        FirebaseApp.initializeApp(this) // Inicializar Firebase
 
         // Pedir permiso antes de enviar notificaciones (solo en Android 13+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1)
         }
+
+        // Write a message to the database
+        val database = Firebase.database
+        val myRef = database.getReference("message")
+
+        myRef.setValue("Hello, World!")
 
         setContent {
             MyApplicationTheme {
@@ -154,7 +166,7 @@ fun AguatorioApp() {
                 onBackClick = {
                     navController.navigateUp()
                 },
-                onLoginClick = {
+                onLoginSuccess = {
                     navController.navigate(Screen.Main.route) {
                         popUpTo(Screen.Welcome.route) { inclusive = true }
                     }

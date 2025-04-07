@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,6 +23,38 @@ fun InitialQuestions1Screen(
     var peso by remember { mutableStateOf("") }
     var edad by remember { mutableStateOf("") }
     var selectedClima by remember { mutableStateOf<String?>(null) }
+    var isLoading by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    val auth = FirebaseAuth.getInstance()
+    val database = FirebaseDatabase.getInstance().reference
+
+    fun saveDataToFirebase() {
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            isLoading = true
+            errorMessage = null
+
+            val userProfile = mapOf(
+                "sexo" to selectedSexo,
+                "peso" to peso,
+                "edad" to edad,
+                "clima" to selectedClima
+            )
+
+            database.child("usuarios").child(userId).child("respuestas").child("biometria").setValue(userProfile)
+                .addOnSuccessListener {
+                    isLoading = false
+                    onNextClick() // Navigate to the next screen
+                }
+                .addOnFailureListener { error ->
+                    isLoading = false
+                    errorMessage = "Error: ${'$'}{error.message}"
+                }
+        } else {
+            errorMessage = "User not authenticated"
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -31,18 +65,13 @@ fun InitialQuestions1Screen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Barra superior con flecha de retroceso
             IconButton(
                 onClick = onBackClick,
                 modifier = Modifier.padding(top = 8.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Regresar"
-                )
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Regresar")
             }
 
-            // Contenido principal
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -50,132 +79,63 @@ fun InitialQuestions1Screen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // Pregunta de sexo
-                Text(
-                    text = "¿Cuál es tu sexo?",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
+                Text(text = "¿Cuál es tu sexo?", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Botones de sexo
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                     listOf("Hombre", "Mujer", "Otro").forEach { sexo ->
                         Button(
                             onClick = { selectedSexo = sexo },
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 4.dp),
+                            modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (selectedSexo == sexo) 
-                                    MaterialTheme.colorScheme.primary 
-                                else 
-                                    MaterialTheme.colorScheme.secondary
+                                containerColor = if (selectedSexo == sexo) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
                             )
-                        ) {
-                            Text(text = sexo)
-                        }
+                        ) { Text(text = sexo) }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // Pregunta de peso
-                Text(
-                    text = "¿Cuál es tu peso?",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
+                Text(text = "¿Cuál es tu peso?", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Selector de peso
-                OutlinedTextField(
-                    value = peso,
-                    onValueChange = { peso = it },
-                    label = { Text("Peso en kg") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
+                OutlinedTextField(value = peso, onValueChange = { peso = it }, label = { Text("Peso en kg") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
 
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // Pregunta de edad
-                Text(
-                    text = "¿Cuál es tu edad?",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
+                Text(text = "¿Cuál es tu edad?", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Selector de edad
-                OutlinedTextField(
-                    value = edad,
-                    onValueChange = { edad = it },
-                    label = { Text("Edad") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
+                OutlinedTextField(value = edad, onValueChange = { edad = it }, label = { Text("Edad") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
 
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // Pregunta de clima
-                Text(
-                    text = "¿Cómo es el clima en tu área?",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
+                Text(text = "¿Cómo es el clima en tu área?", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Botones de clima
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                     listOf("Caliente", "Templado", "Frío").forEach { clima ->
                         Button(
                             onClick = { selectedClima = clima },
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 4.dp),
+                            modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (selectedClima == clima) 
-                                    MaterialTheme.colorScheme.primary 
-                                else 
-                                    MaterialTheme.colorScheme.secondary
+                                containerColor = if (selectedClima == clima) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
                             )
-                        ) {
-                            Text(text = clima)
-                        }
+                        ) { Text(text = clima) }
                     }
                 }
             }
 
-            // Botón siguiente
+            if (errorMessage != null) {
+                Text(text = errorMessage!!, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(8.dp))
+            }
+
             Button(
-                onClick = onNextClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .padding(vertical = 8.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                ),
-                enabled = selectedSexo != null && peso.isNotEmpty() && 
-                         edad.isNotEmpty() && selectedClima != null
+                onClick = { saveDataToFirebase() },
+                modifier = Modifier.fillMaxWidth().height(56.dp).padding(vertical = 8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                enabled = selectedSexo != null && peso.isNotEmpty() && edad.isNotEmpty() && selectedClima != null && !isLoading
             ) {
-                Text(
-                    text = "Siguiente",
-                    fontSize = 18.sp
-                )
+                if (isLoading) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
+                } else {
+                    Text(text = "Siguiente", fontSize = 18.sp)
+                }
             }
         }
     }
-} 
+}
