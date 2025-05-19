@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Gota de agua -->
+    <path
+        android:fillColor="#00BCD4"
+        android:pathData="M100,20 C100,20 60,80 60,120 C60,153.137 77.9086,180 100,180 C122.091,180 140,153.137 140,120 C140,80 100,20 100,20 Z"/>
+
+    <!-- Gafas de sol -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M75,100 C75,90 85,90 85,100 C85,110 75,110 75,100 Z"/>
+    <path
+        android:fillColor="#000000"
+        android:pathData="M115,100 C115,90 125,90 125,100 C125,110 115,110 115,100 Z"/>
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:pathData="M75,100 L115,100"/>
+
+    <!-- Sombrilla -->
+    <path
+        android:fillColor="#FF5722"
+        android:pathData="M70,70 C70,50 130,50 130,70 L100,90 Z"/>
+    <path
+        android:strokeColor="#795548"
+        android:strokeWidth="2"
+        android:pathData="M100,90 L100,70"/>
+
+    <!-- Sonrisa -->
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:pathData="M85,120 Q100,130 115,120"/>
+</vector> 

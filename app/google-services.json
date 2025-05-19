@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "404818345107",
+    "firebase_url": "https://aguatorio-3d2fa-default-rtdb.firebaseio.com",
+    "project_id": "aguatorio-3d2fa",
+    "storage_bucket": "aguatorio-3d2fa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404818345107:android:a2a9b59cb5071d2bee2166",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwYok8tb-0VDLteaTdHkKgL6Wy9eeC2Go"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
