@@ -32,7 +32,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.work.*
+
 import com.example.myapplication.data.WaterRepository
+
+import com.example.app.ui.screens.ActivitiesScreen
+
 import com.example.myapplication.navigation.Screen
 import com.example.myapplication.ui.WaterViewModelFactory
 import com.example.myapplication.ui.screens.*

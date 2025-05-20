@@ -1,224 +1,238 @@
-package com.example.myapplication.ui.screens
+package com.example.app.ui.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.myapplication.ui.components.BottomBar
+import androidx.compose.material3.CardDefaults
 
-data class Activity(
-    val name: String,
+// Colores personalizados
+val PrimaryBlue = Color(0xFF0076BF)
+val SecondaryBlue = Color(0xFF5BB3E6)
+val LightBlue = Color(0x00FFFFFF)
+
+data class RecommendationGroup(
+    val title: String,
     val icon: ImageVector,
-    val duration: String,
-    val waterRecommendation: String,
-    val intensity: String
+    val recommendations: List<String>
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ActivitiesScreen(
-    navController: NavHostController
-) {
-    val activities = remember {
-        listOf(
-            Activity(
-                "Correr",
-                Icons.Default.DirectionsRun,
-                "30-60 min",
-                "500-1000 ml",
-                "Alta"
-            ),
-            Activity(
-                "Ciclismo",
-                Icons.Default.DirectionsBike,
-                "1-2 horas",
-                "750-1500 ml",
-                "Media-Alta"
-            ),
-            Activity(
-                "Natación",
-                Icons.Default.Pool,
-                "45-90 min",
-                "600-1200 ml",
-                "Alta"
-            ),
-            Activity(
-                "Yoga",
-                Icons.Default.SelfImprovement,
-                "30-60 min",
-                "300-500 ml",
-                "Baja"
-            ),
-            Activity(
-                "Gimnasio",
-                Icons.Default.FitnessCenter,
-                "60-90 min",
-                "700-1000 ml",
-                "Media-Alta"
-            ),
-            Activity(
-                "Caminata",
-                Icons.Default.DirectionsWalk,
-                "30-60 min",
-                "400-800 ml",
-                "Baja-Media"
+fun ActivitiesScreen(navController: NavHostController) {
+    val recommendationsList = listOf(
+        RecommendationGroup(
+            "Niños y adolescentes (5 a 17 años)",
+            Icons.Default.ChildCare,
+            listOf(
+                "Duración: Al menos 60 minutos diarios de actividad física moderada a vigorosa",
+                "Tipo: Principalmente aeróbica (correr, nadar, saltar)",
+                "Frecuencia de ejercicios intensos: Al menos 3 veces por semana incluir actividades que fortalezcan músculos y huesos"
+            )
+        ),
+        RecommendationGroup(
+            "Adultos (18 a 64 años)",
+            Icons.Default.DirectionsRun,
+            listOf(
+                "150-300 minutos de actividad moderada o 75-150 minutos de actividad intensa semanal",
+                "Incluir ejercicios de fortalecimiento muscular al menos 2 veces por semana"
+            )
+        ),
+        RecommendationGroup(
+            "Adultos mayores (65 años en adelante)",
+            Icons.Default.Elderly,
+            listOf(
+                "Misma recomendación que adultos",
+                "Incluir ejercicios de equilibrio y coordinación al menos 3 veces por semana"
+            )
+        ),
+        RecommendationGroup(
+            "Personas con enfermedades crónicas o discapacidades",
+            Icons.Default.Favorite,
+            listOf(
+                "Adaptar las recomendaciones según condición física",
+                "Incluir aeróbicos y fortalecimiento muscular en lo posible"
             )
         )
-    }
+    )
 
-    var selectedActivity by remember { mutableStateOf<Activity?>(null) }
-
-    Scaffold(
-        bottomBar = {
-            BottomBar(
-                navController = navController,
-                currentDestination = navController.currentDestination
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* TODO: Implementar registro de nueva actividad */ },
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Agregar actividad"
-                )
-            }
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Actividades",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(activities) { activity ->
-                    ActivityCard(
-                        activity = activity,
-                        isSelected = activity == selectedActivity,
-                        onClick = {
-                            selectedActivity = if (selectedActivity == activity) null else activity
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ActivityCard(
-    activity: Activity,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = onClick,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+    MaterialTheme(
+        colorScheme = lightColorScheme(
+            primary = PrimaryBlue,
+            secondary = SecondaryBlue,
+            background = LightBlue,
+            surface = Color.White
         )
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = activity.icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(32.dp)
+        Scaffold(
+            bottomBar = {
+                BottomBar(
+                    navController = navController,
+                    currentDestination = navController.currentDestination
                 )
-                
-                Spacer(modifier = Modifier.width(16.dp))
-                
-                Column {
-                    Text(
-                        text = activity.name,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                    Text(
-                        text = "Intensidad: ${activity.intensity}",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                    )
-                }
             }
+        ) { paddingValues ->
 
-            if (isSelected) {
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                Divider(color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.1f))
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues), // Importante para evitar que el contenido quede debajo de la barra
+                color = MaterialTheme.colorScheme.background
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    InfoColumn(
-                        title = "Duración",
-                        value = activity.duration
-                    )
-                    InfoColumn(
-                        title = "Agua recomendada",
-                        value = activity.waterRecommendation
-                    )
+                    item { HeaderSection() }
+
+                    items(recommendationsList) { group ->
+                        RecommendationCard(group)
+                    }
+
+                    item {ActivityRecommendationTable()}
                 }
             }
         }
     }
 }
 
+
 @Composable
-private fun InfoColumn(
-    title: String,
-    value: String
-) {
+fun HeaderSection() {
     Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = title,
-            fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-        )
-        Text(
-            text = value,
-            fontSize = 16.sp,
+            text = "Actividad física recomendada",
+            style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = PrimaryBlue
         )
     }
-} 
+
+
+}
+
+
+
+@Composable
+fun RecommendationCard(group: RecommendationGroup) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = group.icon,
+                    contentDescription = group.title,
+                    tint = PrimaryBlue,
+                    modifier = Modifier.size(36.dp)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = group.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = PrimaryBlue
+                )
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            group.recommendations.forEach { rec ->
+                Row(modifier = Modifier.padding(vertical = 4.dp)) {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        tint = SecondaryBlue,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = rec, style = MaterialTheme.typography.bodyMedium)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ActivityRecommendationTable() {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .background(Color.White)
+            .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp)),
+        color = Color(0xFFE1F1FA),
+        shape = RoundedCornerShape(12.dp), // ✅ Usa shape aquí
+        shadowElevation = 4.dp
+    )
+    {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "Tabla resumen de actividad física recomendada semanalmente",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            // Encabezado
+            TableRow(
+                listOf(
+                    "Grupo de Edad / Condición",
+                    "Actividad Aeróbica",
+                    "Intensidad",
+                    "Frecuencia",
+                    "Ejercicios Adicionales"
+                ),
+                isHeader = true
+            )
+
+            // Filas
+            TableRow(listOf("Niños y adolescentes (5-17 años)", "60 min diarios", "Moderada a alta", "Todos los días", "3 días/semana: musculares y óseas"))
+            TableRow(listOf("Adultos (18-64 años)", "150-300 min/semana", "Moderada", "5 días/semana aprox.", "2 días/semana: fuerza muscular"))
+            TableRow(listOf("", "75-150 min/semana", "Intensa", "3 días/semana aprox.", ""))
+            TableRow(listOf("Adultos mayores (65+ años)", "150-300 min/semana", "Moderada o mixta", "Repartida en la semana", "3 días: equilibrio + 2 días: fuerza muscular"))
+            TableRow(listOf("Personas con enfermedades o discapacidades", "Adaptado a sus capacidades (ideal: 150 min/sem)", "Moderada", "Según condición", "En lo posible: fuerza muscular + equilibrio"))
+        }
+    }
+}
+
+
+@Composable
+fun TableRow(data: List<String>, isHeader: Boolean = false) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+    ) {
+        data.forEach { cell ->
+            Text(
+                text = cell,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(4.dp),
+                style = if (isHeader) MaterialTheme.typography.labelMedium else MaterialTheme.typography.bodySmall,
+                fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal
+            )
+        }
+    }
+}
