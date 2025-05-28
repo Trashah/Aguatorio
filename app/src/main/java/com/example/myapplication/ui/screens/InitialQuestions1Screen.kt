@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,7 +89,7 @@ fun InitialQuestions1Screen(
                             onClick = { selectedSexo = sexo },
                             modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (selectedSexo == sexo) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                                containerColor = if (selectedSexo == sexo) Color(0xFF3CCCDC) else Color(0xFF245663)
                             )
                         ) { Text(text = sexo) }
                     }
@@ -113,7 +114,7 @@ fun InitialQuestions1Screen(
                             onClick = { selectedClima = clima },
                             modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (selectedClima == clima) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                                containerColor = if (selectedClima == clima) Color(0xFF3CCCDC) else Color(0xFF245663)
                             )
                         ) { Text(text = clima) }
                     }
@@ -127,7 +128,7 @@ fun InitialQuestions1Screen(
             Button(
                 onClick = { saveDataToFirebase() },
                 modifier = Modifier.fillMaxWidth().height(56.dp).padding(vertical = 8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3CCCDC)),
                 enabled = selectedSexo != null && peso.isNotEmpty() && edad.isNotEmpty() && selectedClima != null && !isLoading
             ) {
                 if (isLoading) {

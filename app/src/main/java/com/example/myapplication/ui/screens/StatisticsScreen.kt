@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,7 +48,7 @@ fun StatisticsScreen(
                 text = "Estadísticas",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = Color(0xFF3CCCDC)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -86,7 +87,7 @@ fun StatisticsScreen(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                    containerColor = Color(0XFFD2F2FC)
                 )
             ) {
                 Column(
@@ -98,14 +99,14 @@ fun StatisticsScreen(
                     Text(
                         text = "Promedio tomado",
                         fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = Color(0xFF3CCCDC)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "${String.format("%.1f", weekData.average())}L",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = Color(0xFF3CCCDC)
                     )
                 }
             }
@@ -122,10 +123,10 @@ private fun TabButton(
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSelected) 
-                MaterialTheme.colorScheme.primary 
-            else 
-                MaterialTheme.colorScheme.secondary
+            containerColor = if (isSelected)
+                Color(0xFF3CCCDC)
+            else
+                Color(0xFF245663)
         ),
         modifier = Modifier.padding(horizontal = 4.dp)
     ) {

@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -57,7 +58,7 @@ fun SettingsScreen(
                 text = "Configuración",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = Color(0xFF3CCCDC)
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -172,7 +173,7 @@ private fun SettingSection(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = Color(0XFFD2F2FC)
         )
     ) {
         Column(
@@ -182,7 +183,7 @@ private fun SettingSection(
                 text = title,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = Color(0xFF3CCCDC)
             )
             Spacer(modifier = Modifier.height(16.dp))
             content()
@@ -209,19 +210,19 @@ private fun SettingSwitch(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+                tint = Color(0xFF3CCCDC)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(
                     text = title,
                     fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = Color(0xFF3CCCDC)
                 )
                 Text(
                     text = description,
                     fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                    color = Color(0xFF3CCCDC).copy(alpha = 0.7f)
                 )
             }
         }
@@ -250,14 +251,14 @@ private fun SettingDropdown(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
+            tint = Color(0xFF3CCCDC)
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(
                 text = title,
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = Color(0xFF3CCCDC)
             )
             ExposedDropdownMenuBox(
                 expanded = expanded,
@@ -304,14 +305,14 @@ private fun SettingTextField(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
+            tint = Color(0xFF3CCCDC)
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(
                 text = title,
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = Color(0xFF3CCCDC)
             )
             TextField(
                 value = value,

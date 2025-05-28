@@ -49,7 +49,7 @@ fun MainScreen(
                 text = "Total acumulado: ${totalAmount}ml",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = Color(0xFF3CCCDC)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -120,7 +120,7 @@ fun MainScreen(
                     .fillMaxWidth()
                     .height(56.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+                    containerColor = Color(0xFF3CCCDC)
                 )
             ) {
                 Row(

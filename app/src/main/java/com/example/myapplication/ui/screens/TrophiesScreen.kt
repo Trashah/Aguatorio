@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -63,7 +64,7 @@ fun TrophiesScreen(
                 text = "Trofeos",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = Color(0xFF3CCCDC)
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -107,7 +108,7 @@ private fun TrophyCard(trophy: Trophy) {
                 Icon(
                     imageVector = if (trophy.isUnlocked) Icons.Default.EmojiEvents else Icons.Default.Lock,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = Color(0xFF3CCCDC),
                     modifier = Modifier.size(32.dp)
                 )
             }
@@ -136,8 +137,8 @@ private fun TrophyCard(trophy: Trophy) {
             LinearProgressIndicator(
                 progress = trophy.progress,
                 modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.primary,
-                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                color = Color(0xFF3CCCDC),
+                trackColor = Color(0xFF3CCCDC).copy(alpha = 0.2f)
             )
         }
     }

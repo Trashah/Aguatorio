@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -67,7 +68,7 @@ fun RegisterScreen(
                     modifier = Modifier
                         .size(120.dp)
                         .clip(CircleShape),
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = Color(0xFF3CCCDC)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -75,7 +76,7 @@ fun RegisterScreen(
                     text = "AGUATORIO",
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = Color(0xFF3CCCDC)
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -170,12 +171,12 @@ fun RegisterScreen(
                         .fillMaxWidth()
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = Color(0xFF3CCCDC)
                     ),
                     enabled = !isLoading
                 ) {
                     if (isLoading) {
-                        CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
+                        CircularProgressIndicator(color = Color(0xFF3CCCDC))
                     } else {
                         Text(text = "Registrarse", fontSize = 18.sp)
                     }

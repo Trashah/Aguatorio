@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -74,7 +75,7 @@ fun LoginScreen(
                     text = "AGUATORIO",
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = Color(0xFF3CCCDC)
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -147,7 +148,7 @@ fun LoginScreen(
                         .fillMaxWidth()
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = Color(0xFF3CCCDC)
                     )
                 ) {
                     Text(
@@ -171,7 +172,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp),
-                color = MaterialTheme.colorScheme.primary
+                color = Color(0xFF3CCCDC)
             )
         }
     }

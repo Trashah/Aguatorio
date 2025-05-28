@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -71,9 +72,9 @@ fun InitialQuestions3Screen(
                         modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (hasDisease == true)
-                                MaterialTheme.colorScheme.primary
+                                Color(0xFF3CCCDC)
                             else
-                                MaterialTheme.colorScheme.secondary
+                                Color(0xFF245663)
                         )
                     ) {
                         Text("Sí")
@@ -83,9 +84,9 @@ fun InitialQuestions3Screen(
                         modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (hasDisease == false)
-                                MaterialTheme.colorScheme.primary
+                                Color(0xFF3CCCDC)
                             else
-                                MaterialTheme.colorScheme.secondary
+                                Color(0xFF245663)
                         )
                     ) {
                         Text("No")
@@ -111,9 +112,9 @@ fun InitialQuestions3Screen(
                         modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (hasLostThirst == true)
-                                MaterialTheme.colorScheme.primary
+                                Color(0xFF3CCCDC)
                             else
-                                MaterialTheme.colorScheme.secondary
+                                Color(0xFF245663)
                         )
                     ) {
                         Text("Sí")
@@ -123,9 +124,9 @@ fun InitialQuestions3Screen(
                         modifier = Modifier.weight(1f).padding(horizontal = 4.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (hasLostThirst == false)
-                                MaterialTheme.colorScheme.primary
+                                Color(0xFF3CCCDC)
                             else
-                                MaterialTheme.colorScheme.secondary
+                                Color(0xFF245663)
                         )
                     ) {
                         Text("No")
@@ -156,7 +157,7 @@ fun InitialQuestions3Screen(
                     .height(56.dp)
                     .padding(vertical = 8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+                    containerColor = Color(0xFF3CCCDC)
                 ),
                 enabled = hasDisease != null && hasLostThirst != null
             ) {
